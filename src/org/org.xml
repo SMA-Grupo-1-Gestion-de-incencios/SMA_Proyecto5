@@ -40,6 +40,24 @@
     -->
 
 </group-specification>
+
+<group-specification id="evacuar">
+    <roles>
+        <role id="CoorEvacuacion" min="1" max="3"/>
+        <role id="CoorEmergencias" min="1" max="3"/>
+    </roles>
+    <!-- 
+    <links>
+       <link from="CoorEmergencias" to="CoorEvacuacion" type="authority"     scope="intra-group" bi-dir="false"/>
+       <link from="CoorEmergencias" to="CoorEvacuacion" type="communication" scope="intra-group" bi-dir="true"/>
+    </links>
+    -->
+    <!-- 
+    <formation-constraints>
+       <compatibility from="CoorEmergencias" to="CoorEvacuacion" />
+    </formation-constraints>
+    -->
+</group-specification>
 </structural-specification>
 
 <functional-specification>
@@ -125,6 +143,11 @@
     <!-- the norms of the application -->
     <norm id="norm1" type="obligation" role="Supervisor" mission="encontrar_incendio"/>
     <norm id="norm2" type="obligation" role="CoorEmergencias" mission="planear_contencion"/>
+
+    <norm id="norm3" type="obligation" role="CoorEmergencias" mission="mComunicar"/>
+    <norm id="norm4" type="obligation" role="CoorEvacuacion" mission="mComunicar"/>
+    <norm id="norm5" type="obligation" role="CoorEvacuacion" mission="mPerimetrar"/>
+    <norm id="norm6" type="obligation" role="CoorEvacuacion" mission="mEvacuar"/>
 </normative-specification>
 
 </organisational-specification>
