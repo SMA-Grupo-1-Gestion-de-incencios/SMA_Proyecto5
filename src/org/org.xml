@@ -68,6 +68,36 @@
             <goal id="planear"/>
         </mission>
     </scheme>
+
+    <scheme id="EvacuacionIndendio" min="1" max="2">
+        <goal id="Proteger" ttf="5 minutes" ds="Proceso completo para evacuar a los civiles">
+            <plan operator="sequence">
+                <goal id="adjudicar_evacuacion" ttf="1 minute" ds="Comunicación entre los 2 roles"/>
+                <goal id="desplazarse" ds="El agente se mueve a la zona incendiada"/>
+                <goal id="calcular_perimetro" ds="Según la información, decidir perímetro"/>
+                <plan operator="parallel">
+                    <goal id="rescatar" ttf="1 minute" ds="Sacar a civiles de la zona del foco"/>
+                    <goal id="alejar" ttf="1 minute" ds="Sacar a civiles de la zona perímetrada"/>
+                </plan>
+                <goal id="asegurar_perimetro" ds="Vigilar que los civiles no pasen el perímetro"/>
+                <goal id="finalizar_evacuacion" ds="Comunicar que el peligro ha terminado"/>
+            </plan>
+        </goal>
+
+        <mission id="mComunicar" min="2">
+            <goal id="adjudicar_evacuacion"/>
+            <goal id="finalizar_evacuacion"/>
+        </mission>
+        <mission id="mPerimetrar" min="1" max="3">
+            <goal id="desplazarse"/>
+            <goal id="calcular_perimetro"/>
+        </mission>
+        <mission id="mEvacuar" min="1" max="3">
+            <goal id="rescatar"/>
+            <goal id="alejar"/>
+            <goal id="asegurar_perimetro"/>
+        </mission>
+    </scheme>
 </functional-specification>
 
 <normative-specification>
