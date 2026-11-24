@@ -43,15 +43,17 @@
 </structural-specification>
 
 <functional-specification>
-    <scheme id="DetectarIncendio" min="1" max="2">
+    <scheme id="DetectarIncendio">
         <goal id="Detectar" ttf="5 minutes" ds="description DetectarIncendio">
             <plan operator="sequence">
                 <goal id="detectar_incendio" ttf="2 minutes" />
-                <plan operator="parallel">
-                    <goal id="investigar_temperatura"/>
-                    <goal id="investigar_viento"/>
-                    <goal id="investigar_lluvia"/>
-                </plan>
+                <goal id="investigar">
+                    <plan operator="parallel">
+                        <goal id="investigar_temperatura"/>
+                        <goal id="investigar_viento"/>
+                        <goal id="investigar_lluvia"/>
+                    </plan>
+                </goal>
                 <goal id="avisar"/>
                 <goal id="planear"/>
             </plan>
@@ -69,16 +71,18 @@
         </mission>
     </scheme>
 
-    <scheme id="EvacuacionIndendio" min="1" max="2">
+    <scheme id="EvacuacionIndendio">
         <goal id="Proteger" ttf="5 minutes" ds="Proceso completo para evacuar a los civiles">
             <plan operator="sequence">
                 <goal id="adjudicar_evacuacion" ttf="1 minute" ds="Comunicación entre los 2 roles"/>
                 <goal id="desplazarse" ds="El agente se mueve a la zona incendiada"/>
                 <goal id="calcular_perimetro" ds="Según la información, decidir perímetro"/>
-                <plan operator="parallel">
-                    <goal id="rescatar" ttf="1 minute" ds="Sacar a civiles de la zona del foco"/>
-                    <goal id="alejar" ttf="1 minute" ds="Sacar a civiles de la zona perímetrada"/>
-                </plan>
+                <goal id="sacar_civiles">
+                    <plan operator="parallel">
+                        <goal id="rescatar" ttf="1 minute" ds="Sacar a civiles de la zona del foco"/>
+                        <goal id="alejar" ttf="1 minute" ds="Sacar a civiles de la zona perímetrada"/>
+                    </plan>
+                </goal>
                 <goal id="asegurar_perimetro" ds="Vigilar que los civiles no pasen el perímetro"/>
                 <goal id="finalizar_evacuacion" ds="Comunicar que el peligro ha terminado"/>
             </plan>
