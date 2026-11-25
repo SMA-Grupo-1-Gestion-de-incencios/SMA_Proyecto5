@@ -22,12 +22,13 @@ mas proyectoSMA {
       artifact c1: example.Counter(3) 
     }
 
+    /*
     organisation o: org.xml {
       group g1 : group1 {
         players: bob role1
       }
     }
-
+    */
     
 
 }
