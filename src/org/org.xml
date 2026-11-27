@@ -27,12 +27,13 @@
                 <role id="supervisor" min="1" max="2"/>
                 <role id="coorEmergencias" min="1" max="3"/>
             </roles>
-            <!-- 
+             
+             <!--Los links funcionan para especificar la forma en la que se pueden comunicar-->
             <links>
-            <link from="supervisor" to="coorEmergencias" type="authority"     scope="intra-group" bi-dir="false"/>
-            <link from="coorEmergencias" to="supervisor" type="communication" scope="intra-group" bi-dir="false"/>
+                <link from="supervisor" to="coorEmergencias" type="authority"     scope="intra-group" bi-dir="false"/>
+                <link from="coorEmergencias" to="supervisor" type="communication" scope="intra-group" bi-dir="false"/>
             </links>
-            -->
+            
             <!-- 
             <formation-constraints>
             <compatibility from="supervisor" to="coorEmergencias" />
@@ -45,12 +46,12 @@
                 <role id="coorEvacuacion" min="1" max="3"/>
                 <role id="coorEmergencias" min="1" max="3"/>
             </roles>
-            <!-- 
+            
             <links>
-            <link from="coorEmergencias" to="coorEvacuacion" type="authority"     scope="intra-group" bi-dir="false"/>
-            <link from="coorEmergencias" to="coorEvacuacion" type="communication" scope="intra-group" bi-dir="true"/>
+                <link from="coorEmergencias" to="coorEvacuacion" type="authority"     scope="intra-group" bi-dir="false"/>
+                <link from="coorEmergencias" to="coorEvacuacion" type="communication" scope="intra-group" bi-dir="true"/>
             </links>
-            -->
+            
             <!-- 
             <formation-constraints>
             <compatibility from="coorEmergencias" to="coorEvacuacion" />
@@ -63,8 +64,8 @@
 </structural-specification>
 
 <functional-specification>
-    <scheme id="DetectarIncendio">
-        <goal id="Detectar" ttf="5 minutes" ds="description DetectarIncendio">
+    <scheme id="detectarIncendio">
+        <goal id="detectar" ttf="5 minutes" ds="description DetectarIncendio">
             <plan operator="sequence">
                 <goal id="detectar_incendio" ttf="2 minutes" />
                 <goal id="investigar">
@@ -91,8 +92,8 @@
         </mission>
     </scheme>
 
-    <scheme id="EvacuacionIndendio">
-        <goal id="Proteger" ttf="5 minutes" ds="Proceso completo para evacuar a los civiles">
+    <scheme id="evacuacionIndendio">
+        <goal id="proteger" ttf="5 minutes" ds="Proceso completo para evacuar a los civiles">
             <plan operator="sequence">
                 <goal id="adjudicar_evacuacion" ttf="1 minute" ds="Comunicación entre los 2 roles"/>
                 <goal id="desplazarse" ds="El agente se mueve a la zona incendiada"/>
