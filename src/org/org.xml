@@ -14,42 +14,113 @@
 <structural-specification>
 
 <role-definitions>
-    <role id="role1" />
-    <role id="role2" />
+    <role id="supervisor" />
+    <role id="coorEmergencias" />
+    <role id="coorEvacuacion" />
+    <role id="coorExtincion" />
 </role-definitions>
+<!-- Grupo principal, para que haya varios grupos deben ser subgrupos -->
+<group-specification id="organizacion">
+    <subgroups>
+        <group-specification id="detectar" min="1" max="1">
+            <roles>
+                <role id="supervisor" min="1" max="2"/>
+                <role id="coorEmergencias" min="1" max="3"/>
+            </roles>
+             
+             <!--Los links funcionan para especificar la forma en la que se pueden comunicar-->
+            <links>
+                <link from="supervisor" to="coorEmergencias" type="authority"     scope="intra-group" bi-dir="false"/>
+                <link from="coorEmergencias" to="supervisor" type="communication" scope="intra-group" bi-dir="false"/>
+            </links>
+            
+            <!-- 
+            <formation-constraints>
+            <compatibility from="supervisor" to="coorEmergencias" />
+            </formation-constraints>
+            -->
+        </group-specification>
 
-<group-specification id="group1">
-    <roles>
-        <role id="role1" min="1" max="1"/>
-        <role id="role2" min="1" max="1"/>
-    </roles>
-
-    <links>
-       <link from="role1" to="role2" type="authority"     scope="intra-group" bi-dir="false"/>
-       <link from="role2" to="role1" type="communication" scope="intra-group" bi-dir="false"/>
-    </links>
-    <formation-constraints>
-       <compatibility from="role1" to="role2" />
-    </formation-constraints>
+        <group-specification id="evacuar" min="1" max="1">
+            <roles>
+                <role id="coorEvacuacion" min="1" max="3"/>
+                <role id="coorEmergencias" min="1" max="3"/>
+            </roles>
+            
+            <links>
+                <link from="coorEmergencias" to="coorEvacuacion" type="authority"     scope="intra-group" bi-dir="false"/>
+                <link from="coorEmergencias" to="coorEvacuacion" type="communication" scope="intra-group" bi-dir="true"/>
+            </links>
+            
+            <!-- 
+            <formation-constraints>
+            <compatibility from="coorEmergencias" to="coorEvacuacion" />
+            </formation-constraints>
+            -->
+        </group-specification>
+    </subgroups>
 </group-specification>
+
 </structural-specification>
 
 <functional-specification>
-    <scheme id="scheme1">
-        <goal id="goal1">
+    <scheme id="detectarIncendio">
+        <goal id="detectar" ttf="5 minutes" ds="description DetectarIncendio">
             <plan operator="sequence">
-                <goal id="goal2"    ttf="20 minutes" ds="description goal2"/>
-                <goal id="goal3"/>
-                <goal id="goal4"/>
+                <goal id="detectar_incendio" ttf="2 minutes" />
+                <goal id="investigar">
+                    <plan operator="parallel">
+                        <goal id="investigar_temperatura"/>
+                        <goal id="investigar_viento"/>
+                        <goal id="investigar_lluvia"/>
+                    </plan>
+                </goal>
+                <goal id="avisar"/>
+                <goal id="planear"/>
             </plan>
         </goal>
 
-        <mission id="mission1" min="1" max="1">
-            <goal id="goal2"/>
-            <goal id="goal4"/>
+        <mission id="encontrar_incendio" min="1" max="2">
+            <goal id="detectar_incendio"/>
+            <goal id="investigar_temperatura"/>
+            <goal id="investigar_viento"/>
+            <goal id="investigar_lluvia"/>
         </mission>
-        <mission id="mission2" min="1" max="1">
-            <goal id="goal3"/>
+        <mission id="planear_contencion" min="1" max="5">
+            <goal id="avisar"/>
+            <goal id="planear"/>
+        </mission>
+    </scheme>
+
+    <scheme id="evacuacionIndendio">
+        <goal id="proteger" ttf="5 minutes" ds="Proceso completo para evacuar a los civiles">
+            <plan operator="sequence">
+                <goal id="adjudicar_evacuacion" ttf="1 minute" ds="Comunicación entre los 2 roles"/>
+                <goal id="desplazarse" ds="El agente se mueve a la zona incendiada"/>
+                <goal id="calcular_perimetro" ds="Según la información, decidir perímetro"/>
+                <goal id="sacar_civiles">
+                    <plan operator="parallel">
+                        <goal id="rescatar" ttf="1 minute" ds="Sacar a civiles de la zona del foco"/>
+                        <goal id="alejar" ttf="1 minute" ds="Sacar a civiles de la zona perímetrada"/>
+                    </plan>
+                </goal>
+                <goal id="asegurar_perimetro" ds="Vigilar que los civiles no pasen el perímetro"/>
+                <goal id="finalizar_evacuacion" ds="Comunicar que el peligro ha terminado"/>
+            </plan>
+        </goal>
+
+        <mission id="mComunicar" min="2">
+            <goal id="adjudicar_evacuacion"/>
+            <goal id="finalizar_evacuacion"/>
+        </mission>
+        <mission id="mPerimetrar" min="1" max="3">
+            <goal id="desplazarse"/>
+            <goal id="calcular_perimetro"/>
+        </mission>
+        <mission id="mEvacuar" min="1" max="3">
+            <goal id="rescatar"/>
+            <goal id="alejar"/>
+            <goal id="asegurar_perimetro"/>
         </mission>
     </scheme>
 </functional-specification>
@@ -73,7 +144,13 @@
     </properties-->
 
     <!-- the norms of the application -->
-    <norm id="norm1" type="obligation" role="role2" mission="mission1"/>
+    <norm id="norm1" type="obligation" role="supervisor" mission="encontrar_incendio"/>
+    <norm id="norm2" type="obligation" role="coorEmergencias" mission="planear_contencion"/>
+
+    <norm id="norm3" type="obligation" role="coorEmergencias" mission="mComunicar"/>
+    <norm id="norm4" type="obligation" role="coorEvacuacion" mission="mComunicar"/>
+    <norm id="norm5" type="obligation" role="coorEvacuacion" mission="mPerimetrar"/>
+    <norm id="norm6" type="obligation" role="coorEvacuacion" mission="mEvacuar"/>
 </normative-specification>
 
 </organisational-specification>

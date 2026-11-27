@@ -14,20 +14,33 @@
 
 mas proyectoSMA {
 
-    agent bob: sample_agent.asl {
-      focus: w.c1 
-    }
+  agent bob: sample_agent.asl {
+    focus: w.c1 
+  }
+  agent alice: sample_agent.asl {
+    focus: w.c1 
+  }
+  agent carol: sample_agent.asl {
+    focus: w.c1 
+  }
 
-    workspace w {
-      artifact c1: example.Counter(3) 
-    }
+  workspace w {
+    artifact c1: example.Counter(3) 
+  }
 
-    organisation o: org.xml {
-      group g1 : group1 {
-        players: bob role1
+  
+  organisation o: org.xml {
+    group g1 : organizacion {
+
+      // Grupo de detección
+      group g2 : detectar {
+        players: bob supervisor, alice coorEmergencias
+      }
+
+      // Grupo de evacuación
+      group g3 : evacuar {
+        players: alice coorEmergencias, carol coorEvacuacion
       }
     }
-
-    
-
+  }
 }
