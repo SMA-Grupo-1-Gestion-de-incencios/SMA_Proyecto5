@@ -18,6 +18,7 @@
     <role id="coorEmergencias" />
     <role id="coorEvacuacion" />
     <role id="coorExtincion" />
+    <role id="subastador"> <extends role="coorExtincion"> </role>
 </role-definitions>
 <!-- Grupo principal, para que haya varios grupos deben ser subgrupos -->
 <group-specification id="organizacion">
@@ -37,6 +38,26 @@
             <!-- 
             <formation-constraints>
             <compatibility from="supervisor" to="coorEmergencias" />
+            </formation-constraints>
+            -->
+        </group-specification>
+
+        <group-specification id="extinguir" min="1" max="1">
+            <roles>
+                <role id="coorExtincion" min="1" max="3"/>
+                <role id="subastador" min="1" max="1" />
+                <role id="coorEmergencias" min="1" max="3"/>
+            </roles>
+            
+            <links>
+                <link from="coorEmergencias" to="coorExtincion" type="authority"     scope="intra-group" bi-dir="false"/>
+                <link from="coorEmergencias" to="coorExtincion" type="communication" scope="intra-group" bi-dir="true"/>
+                <link from="subastador" to="coorExtincion" type="communication" scope="intra-group" bi-dir="true"/>
+            </links>
+            
+            <!-- 
+            <formation-constraints>
+            <compatibility from="coorEmergencias" to="coorExtincion" />
             </formation-constraints>
             -->
         </group-specification>
@@ -92,7 +113,7 @@
         </mission>
     </scheme>
 
-    <scheme id="evacuacionIndendio">
+    <scheme id="evacuacionIncendio">
         <goal id="proteger" ttf="5 minutes" ds="Proceso completo para evacuar a los civiles">
             <plan operator="sequence">
                 <goal id="adjudicar_evacuacion" ttf="1 minute" ds="Comunicación entre los 2 roles"/>
@@ -123,6 +144,34 @@
             <goal id="asegurar_perimetro"/>
         </mission>
     </scheme>
+
+    <scheme id="extincionIncendio">
+        <goal id="protegerMaterialmente" ttf="5 minutes" ds="Proceso de extinción del incendio">
+            <plan operator="sequence">
+                <goal id="adjudicar" ttf="1 minute" ds="Adjudica una zona del mapa con incendio a un agente de extinción"/>
+                <goal id="finalizar" ds="Se termina una adjudicación una vez el incendio ha sido extinguido en esa zona"/>
+                
+                <goal id="subastar" ds="Inicia una subasta del artefacto de extinción, el cuál es único y sólo puede usar cada vez el agente que más lo necesite"/>
+                <goal id="asignar" ds="Asigna el artefacto de extinción a un agente en concreto"/>
+                
+                <goal id="extinguir" ds="Realizar el proceso de extinción en la zona adjudicada una vez se tenga el artefacto"/>
+            </plan>
+        </goal>
+
+        <mission id="mAdjudicar" min="1">
+            <goal id="adjudicar"/>
+            <goal id="finalizar"/>
+        </mission>
+        <mission id="mPriorizar" min="1" max="1">
+            <goal id="subastar"/>
+            <goal id="asignar"/>
+        </mission>
+        <mission id="mExtinguir" min="1" max="3">
+            <goal id="extinguir"/>
+        </mission>
+    </scheme>
+
+    
 </functional-specification>
 
 <normative-specification>
@@ -151,6 +200,11 @@
     <norm id="norm4" type="obligation" role="coorEvacuacion" mission="mComunicar"/>
     <norm id="norm5" type="obligation" role="coorEvacuacion" mission="mPerimetrar"/>
     <norm id="norm6" type="obligation" role="coorEvacuacion" mission="mEvacuar"/>
+
+    <norm id="norm7" type="obligation" role="coorEmergencias" mission="mAdjudicar"/>
+    <norm id="norm8" type="obligation" role="subastador" mission="mPriorizar"/>
+    <norm id="norm9" type="obligation" role="coorExtincion" mission="mExtinguir"/>
+
 </normative-specification>
 
 </organisational-specification>
